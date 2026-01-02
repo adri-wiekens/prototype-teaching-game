@@ -1,0 +1,9 @@
+player:
+  rotation_speed: 3.0
+  acceleration: 0.981
+  hp: 1000
+  current_hp: 1000
+bullet:
+  rotation_speed: 3.0
+  acceleration: 0.981
+  muzzle_velocity: 30

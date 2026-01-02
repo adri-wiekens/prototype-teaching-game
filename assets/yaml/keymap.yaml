@@ -1,0 +1,20 @@
+movement:
+  forward: w
+  backward: s
+  turn_left: a
+  turn_right: d
+  strafe_left: q
+  strafe_right: e
+other_keybinding:
+  action_1: 1
+  action_2: 2
+  action_3: 3
+  action_4: 4
+  action_5: 5
+  action_6: 6
+  action_7: 7
+  action_8: 8
+  action_9: 9
+  action_0: 0
+  shoot: ' '
+  
