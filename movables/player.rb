@@ -2,7 +2,6 @@ module Movables
   class Player < Mobile
     def initialize
       super('assets/images/sprite_2.png', id: 'player', x: screen_width/2, y: screen_height/2, width: 40, height: 40)
-      self.gravity_affected= false
     end
 
     def key_bindings

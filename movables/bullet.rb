@@ -11,8 +11,8 @@ module Movables
 
     def initialize(mobile:, **additional_parameters)
       file_path = 'assets/images/bullet.png'
-      @timer = 1.3
-      @shoot_time = Time.now
+      @timer = 60
+      @shoot_time = engine.global_ticker
       super(file_path,
         rotation: mobile.rotate, 
         start_velocity_x: mobile.velocity_x,
@@ -26,7 +26,7 @@ module Movables
 
     def update_position(friction)
       super
-      explode if Time.now > self.shoot_time + self.timer
+      explode if engine.global_ticker > self.shoot_time + self.timer
     end
   end
 end

@@ -95,17 +95,17 @@ module Movables
       angle = self.rotate * Math::PI / 180
       case direction
       when :forward
-        @velocity_x -= Math.sin(-angle) * self.acceleration
-        @velocity_y -= Math.cos(angle) * self.acceleration
+        @velocity_x -= Math.sin(-angle) * self.acceleration * engine.delta_time
+        @velocity_y -= Math.cos(angle) * self.acceleration * engine.delta_time
       when :backward
-        @velocity_x += Math.sin(-angle) * self.acceleration
-        @velocity_y += Math.cos(angle) * self.acceleration
+        @velocity_x += Math.sin(-angle) * self.acceleration * engine.delta_time
+        @velocity_y += Math.cos(angle) * self.acceleration * engine.delta_time
       when :left
-        @velocity_y -= Math.sin(angle) * self.acceleration
-        @velocity_x -= Math.cos(-angle) * self.acceleration
+        @velocity_y -= Math.sin(angle) * self.acceleration * engine.delta_time
+        @velocity_x -= Math.cos(-angle) * self.acceleration * engine.delta_time
       when :right
-        @velocity_y += Math.sin(angle) * self.acceleration
-        @velocity_x += Math.cos(-angle) * self.acceleration
+        @velocity_y += Math.sin(angle) * self.acceleration * engine.delta_time
+        @velocity_x += Math.cos(-angle) * self.acceleration * engine.delta_time
       else
         raise 'unsupported direction'
       end

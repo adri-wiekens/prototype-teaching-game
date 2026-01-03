@@ -15,6 +15,13 @@ module Core
     attr_reader :friction
     attr_reader :gravity
     attr_reader :interval_ticker
+    attr_reader :clickables
+    attr_reader :global_ticker
+
+    def delta_time
+      return 1 if @delta_time.nil?
+      @delta_time.to_f * 60
+    end
 
     def set_bounds(width, height)
       self.friction = 0.05
@@ -24,6 +31,9 @@ module Core
       @bounds = { width: width, height: height }
       @movables ||= []
       @visible_events ||= []
+      @clickables ||= []
+      @last_time = 0.0
+      @global_ticker = 0
 
       set_key_binder
       gui.set_all_elements
@@ -32,6 +42,7 @@ module Core
       @zoomlevel = 1.0
 
       self.movables << self.player
+      self.clickables << self.player
     end
 
     private def gravity=(val)
@@ -76,6 +87,9 @@ module Core
     end
 
     def update
+      current_time = Time.now
+      @delta_time = current_time - @last_time
+
       movables.each do |mov|
         mov.update_position(friction)
         mov.update_attributes
@@ -88,12 +102,21 @@ module Core
         end
       end
 
-      movables.reject!(&:mark_for_remove)
       visible_events.each do | vis | 
         vis.remove if vis.mark_for_remove
       end
-      visible_events.reject!(&:mark_for_remove)
+
+      take_out_garbage
       gui.refresh
+
+      @global_ticker += 1
+      @last_time = current_time
+    end
+
+    def take_out_garbage
+      movables.reject!(&:mark_for_remove)
+      clickables.reject!(&:mark_for_remove)
+      visible_events.reject!(&:mark_for_remove)
     end
 
     def gui
@@ -101,7 +124,15 @@ module Core
     end
 
     def handle_mouse_click(event)
-      p "muis klik!"
+      clickables.each do |click_me|
+        if event.button == :left &&
+          event.x.between?(click_me.x, click_me.x + click_me.width) &&
+          event.y.between?(click_me.y, click_me.y + click_me.height)
+          gui.select(click_me)
+          return click_me
+        end
+      end
+      gui.deselect
     end
   end
 end
