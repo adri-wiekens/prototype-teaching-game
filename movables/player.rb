@@ -8,11 +8,15 @@ module Movables
       ::Events::KeyBinder.instance.key_bindings
     end
 
-    def other_actions
-      ::Events::KeyBinder.instance.inverted_actions
+    def key_hold_actions
+      ::Events::KeyBinder.instance.key_hold_actions
     end
 
-    def handle_player_input(event)
+    def key_down_actions
+      ::Events::KeyBinder.instance.key_down_actions
+    end
+
+    def handle_key_held_input(event)
       # movement
       forward = self.key_bindings.dig('movement', 'forward')
       backward =  self.key_bindings.dig('movement', 'backward')
@@ -35,15 +39,27 @@ module Movables
         accelerate(:right)
       end
 
-      handle_other_events(event)
+      handle_other_events(event, key_hold_actions)
     end
 
-    def handle_other_events(event)
-      return unless other_actions.key?(event.key)
-      other_actions[event.key].each do |action|
+    def handle_key_down_input(event)      
+      handle_other_events(event, key_down_actions)
+    end
+
+    def handle_other_events(event, keymap)
+      return unless keymap.key?(event.key)
+      keymap[event.key].each do |action|        
         case action
         when :shoot
           shoot
+        when :debug
+          Core::Gui.instance.toggle_debug_info
+        when :unknown
+          p "something"
+        when :play_sound
+          p "sound!"
+          sound = Sound.new('assets/audio/lalala-161733.mp3')
+          sound.play
         else
           p "I don't know what to do yet!"
         end

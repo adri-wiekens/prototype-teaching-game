@@ -94,8 +94,12 @@ module Core
     end
 
     def show_debug_text(enabled)
-      self.show_debug_info = enabled
-      self.debug_info.each { |info| info.opacity = enabled ? 1 : 0 }
+      @show_debug_info = enabled
+      self.debug_info.each { |info| info.color.a = enabled ? 1 : 0 }
+    end
+
+    def toggle_debug_info
+      show_debug_text(!self.show_debug_info)
     end
 
     def update_debug_info
