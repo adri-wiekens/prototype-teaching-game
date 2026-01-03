@@ -1,17 +1,15 @@
+# frozen_string_literal: true
+
 require 'forwardable'
+require_relative '../core/sound_player'
 
 module Movables
   class Movable < Ruby2D::Image
     extend Forwardable
+    include Core::SoundPlayer
 
-    attr_reader :velocity_x
-    attr_reader :velocity_y
-    attr_reader :rotation_speed
-    attr_reader :acceleration
-    attr_reader :friction_affected
-    attr_reader :gravity_affected
-    attr_reader :id
-    attr_reader :mark_for_remove
+    attr_reader :velocity_x, :velocity_y, :rotation_speed, :acceleration, :friction_affected, :gravity_affected, :id,
+                :mark_for_remove
 
     def engine
       Core::Engine.instance
@@ -43,69 +41,73 @@ module Movables
 
     def remove_me
       @mark_for_remove = true
-      self.remove
+      remove
     end
 
     def gravity_affected=(val)
-      raise "Only true or false!" unless val == true || val == false
+      raise 'Only true or false!' unless [true, false].include?(val)
+
       @gravity_affected = val
     end
 
     def friction_affected=(val)
-      raise "Only true or false!" unless val == true || val == false
+      raise 'Only true or false!' unless [true, false].include?(val)
+
       @friction_affected = val
     end
 
     def apply_gravity(gravity)
-      return unless self.gravity_affected
+      return unless gravity_affected
+
       @velocity_y +=  gravity
     end
 
     def update_attributes
-      @rotation_speed = mob_db_get(id)["rotation_speed"]
-      @acceleration = mob_db_get(id)["acceleration"]
+      @rotation_speed = mob_db_get(id)['rotation_speed']
+      @acceleration = mob_db_get(id)['acceleration']
     end
 
     def rotate_to(direction)
       case direction
       when :left
-        self.rotate -= rotation_speed
+        self.rotate -= rotation_speed * engine.delta_time
       when :right
-        self.rotate += rotation_speed
+        self.rotate += rotation_speed * engine.delta_time
       else
         raise 'unsupported direction'
       end
     end
 
     def update_position(friction)
-      self.x += self.velocity_x
-      self.y += self.velocity_y
+      self.x += velocity_x
+      self.y += velocity_y
 
-      return unless self.friction_affected
+      return unless friction_affected
+
       @velocity_x *= friction
       @velocity_y *= friction
     end
 
     def damage_collision(damage)
       @current_hp -= damage
-      @current_hp = 0 if @current_hp < 0
+      @current_hp = 0 if @current_hp.negative?
     end
 
     def accelerate(direction)
       angle = self.rotate * Math::PI / 180
       case direction
       when :forward
-        @velocity_x -= Math.sin(-angle) * self.acceleration * engine.delta_time
-        @velocity_y -= Math.cos(angle) * self.acceleration * engine.delta_time
+        @velocity_x -= Math.sin(-angle) * acceleration * engine.delta_time
+        @velocity_y -= Math.cos(angle) * acceleration * engine.delta_time
       when :backward
-        @velocity_x += Math.sin(-angle) * self.acceleration * engine.delta_time
-        @velocity_y += Math.cos(angle) * self.acceleration * engine.delta_time
+        @velocity_x += Math.sin(-angle) * acceleration * engine.delta_time
+        @velocity_y += Math.cos(angle) * acceleration * engine.delta_time
       when :left
-        @velocity_y -= Math.sin(angle) * self.acceleration * engine.delta_time
-        @velocity_x -= Math.cos(-angle) * self.acceleration * engine.delta_time
+        @velocity_y -= Math.sin(angle) * acceleration * engine.delta_time
+        @velocity_x -= Math.cos(-angle) * acceleration * engine.delta_time
       when :right
-        @velocity_y += Math.sin(angle) * self.acceleration * engine.delta_time
-        @velocity_x += Math.cos(-angle) * self.acceleration * engine.delta_time
+        @velocity_y += Math.sin(angle) * acceleration * engine.delta_time
+        @velocity_x += Math.cos(-angle) * acceleration * engine.delta_time
       else
         raise 'unsupported direction'
       end

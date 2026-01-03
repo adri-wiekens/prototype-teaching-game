@@ -1,12 +1,12 @@
+# frozen_string_literal: true
+
 require 'yaml'
 
 module Events
   class KeyBinder
     include Singleton
 
-    attr_reader :key_bindings
-    attr_reader :key_hold_actions
-    attr_reader :key_down_actions
+    attr_reader :key_bindings, :key_hold_actions, :key_down_actions
 
     def reload_key_bindings
       @key_bindings = YAML.load_file('assets/yaml/keymap.yaml')
@@ -20,10 +20,8 @@ module Events
     end
 
     def calculate_inverted_actions
-      @key_hold_actions = invert_hash(self.key_bindings.dig('other_keybinding', 'key_hold') || {})
-      @key_down_actions = invert_hash(self.key_bindings.dig('other_keybinding', 'key_down') || {})      
+      @key_hold_actions = invert_hash(key_bindings.dig('other_keybinding', 'key_hold') || {})
+      @key_down_actions = invert_hash(key_bindings.dig('other_keybinding', 'key_down') || {})
     end
   end
 end
-
-

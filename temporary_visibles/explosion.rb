@@ -1,4 +1,6 @@
-require_relative './visible_event.rb'
+# frozen_string_literal: true
+
+require_relative './visible_event'
 
 module TemporaryVisibles
   class Explosion < VisibleEvent

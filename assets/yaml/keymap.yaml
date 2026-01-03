@@ -19,6 +19,7 @@ other_keybinding:
     action_0: 0
     debug: '/'
     play_sound: 'l'
+    play_music:  m
   key_hold:
     shoot: space
     unknown: ','

@@ -2,10 +2,13 @@ require 'forwardable'
 
 require_relative './movable.rb'
 require_relative '../temporary_visibles/explosion.rb'
+require_relative '../core/sound_player.rb'
 
 module Movables
   class Projectile < Movable
     extend Forwardable
+
+    include  Core::SoundPlayer
 
     attr_reader :muzzle_velocity
 
@@ -27,7 +30,8 @@ module Movables
       middle_x = self.width/2 + self.x
       middle_y = self.height/2 + self.y
       self.remove_me
-      engine.explode(middle_x, middle_y)
+      play_sound('explosion')
+      engine.explode(middle_x, middle_y)      
       self.remove
     end
 
