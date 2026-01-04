@@ -65,6 +65,7 @@ PLATFORMS
 
 DEPENDENCIES
   activesupport
+  concurrent-ruby (~> 1.3)
   rubocop
   ruby2d
 

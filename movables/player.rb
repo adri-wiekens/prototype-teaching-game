@@ -66,7 +66,7 @@ module Movables
         when :play_music
           play_music('butterfly')
         when :play_sound
-
+          play_sound('lalala-161733.mp3')
         else
           p "I don't know what to do yet!"
         end

@@ -3,6 +3,7 @@
 require 'ruby2d'
 require_relative './core/engine'
 require_relative './core/directory_includer'
+require_relative './core/background_workers/background_worker_manager'
 
 extend Core::DirectoryIncluder
 
@@ -17,7 +18,17 @@ def settings
   Core::GameSettings.instance
 end
 
+def threadpool
+  Core::BackgroundWorkers::BackgroundWorkerManager.instance
+end
+
 game = Core::Engine.instance
+
+threadpool.build_connection
+
+threadpool.add_worker(:ticker)
+threadpool.add_worker(:connection)
+
 game.set_bounds(settings.resolution[:width], settings.resolution[:height])
 set(title: 'untitled sci-fi title', width: game.bounds[:width], height: game.bounds[:height])
 

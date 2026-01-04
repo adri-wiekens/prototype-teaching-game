@@ -19,7 +19,7 @@ module Core
     end
 
     def play_sound(sound_file)
-      sound = Sound.new("assets/audio/effects/#{sound_file}.wav")
+      sound = Sound.new("assets/audio/effects/#{sound_file}")
       sounds << sound
       sound.play
     end
