@@ -27,11 +27,11 @@ module Movables
     end
 
     def explode
+      play_sound('explosion')
       middle_x = self.width/2 + self.x
       middle_y = self.height/2 + self.y
       self.remove_me
-      play_sound('explosion')
-      engine.explode(middle_x, middle_y)      
+      engine.explode(middle_x, middle_y)
       self.remove
     end
 

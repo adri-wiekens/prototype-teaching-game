@@ -6,4 +6,4 @@ player:
 bullet:
   rotation_speed: 3.0
   acceleration: 0.981
-  muzzle_velocity: 30
+  muzzle_velocity: 25

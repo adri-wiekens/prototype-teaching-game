@@ -7,7 +7,7 @@ module Movables
     include Core::SoundPlayer
 
     def initialize
-      super('assets/images/sprite_2.png', id: 'player', x: screen_width / 2, y: screen_height / 2, width: 40, height: 40)
+      super('assets/images/sietska.png', id: 'player', x: screen_width / 2, y: screen_height / 2, width: 40, height: 40)
     end
 
     def key_bindings
