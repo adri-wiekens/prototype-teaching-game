@@ -1,6 +1,7 @@
 require 'forwardable'
 
-require_relative './movable.rb'
+require_relative './movable'
+require_relative '../unmovables/world'
 
 module Movables
   class Mobile < Movable
@@ -8,9 +9,11 @@ module Movables
 
     attr_reader :current_hp
     attr_reader :max_hp
+    attr_reader :name
 
     def initialize(file_path, id:, **additional_parameters)
       super(file_path, id:, **additional_parameters)
+      @selectable = true
       @current_hp = startup_hp
     end
 
@@ -26,28 +29,46 @@ module Movables
      def update_position(friction)
       super
 
-      ricochet(:x) if self.x < 0 || self.x > screen_width  - self.width
-      ricochet(:y) if self.y < 0 || self.y > screen_height - self.height
+      ricochet(:x) if self.x < min_horizontal || self.x > max_horizontal
+      ricochet(:y) if self.y > max_depth || self.y < max_height
     end
 
     def shoot
-      engine.movables << Bullet.new(mobile: self)
+      engine << Bullet.new(mobile: self)
+    end
+
+    def world
+      Unmovables::World.current
+    end
+
+    def max_height
+      world.limits[:sky]
+    end
+
+    def max_depth
+      world.limits[:ground] - self.height
+    end
+
+    def min_horizontal
+      world.limits[:west]
+    end
+
+    def max_horizontal
+      world.limits[:east] - self.width
     end
 
     def ricochet(direction)
-      max_height = screen_height - self.height
-      max_width = screen_width - self.width
       case direction
       when :x
         @velocity_x = -@velocity_x
-        self.x = max_width if self.x > max_width
-        self.x = 0 if self.x < 0
-        damage_collision(@velocity_x*@velocity_x) if velocity_x.abs > 5
+        self.x = max_horizontal if self.x > max_horizontal
+        self.x = min_horizontal if self.x < min_horizontal
+        damage_collision(@velocity_x*@velocity_x) if velocity_x.abs > 10
       when :y
         @velocity_y = -@velocity_y
-        self.y = max_height if self.y > max_height
-        self.y = 0 if self.y < 0
-        damage_collision(@velocity_y*@velocity_y) if velocity_y.abs > 5
+        self.y = max_height if self.y < max_height
+        self.y = max_depth if self.y > max_depth
+        damage_collision(@velocity_y*@velocity_y) if velocity_y.abs > 10
       else
         raise 'unsupported direction'
       end

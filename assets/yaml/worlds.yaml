@@ -1,0 +1,6 @@
+world_1:
+  limits:
+    sky_limit:  -1000
+    ground_limit: 2000
+    east: 3000
+    west: -500

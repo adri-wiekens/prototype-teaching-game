@@ -24,6 +24,10 @@ end
 
 game = Core::Engine.instance
 
+world = Unmovables::World.instance
+
+world.world = 'world_1'
+
 threadpool.build_connection
 
 threadpool.add_worker(:ticker)
@@ -42,6 +46,10 @@ end
 
 on :mouse_down do |event|
   game.handle_mouse_click(event)
+end
+
+on :mouse_scroll do |event|
+  game.handle_mouse_scroll(event, Window.mouse_x, Window.mouse_y)
 end
 
 update do

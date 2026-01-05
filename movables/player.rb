@@ -31,6 +31,11 @@ module Movables
       strafe_left = key_bindings.dig('movement', 'strafe_left')
       strafe_right = key_bindings.dig('movement', 'strafe_right')
 
+      pan_left = key_bindings.dig('movement', 'pan_left')
+      pan_right = key_bindings.dig('movement', 'pan_right')
+      pan_up = key_bindings.dig('movement', 'pan_up')
+      pan_down = key_bindings.dig('movement', 'pan_down')
+
       if !turn_left.nil? && turn_left == event.key
         rotate_to(:left)
       elsif !turn_right.nil? && turn_right == event.key
@@ -43,6 +48,14 @@ module Movables
         accelerate(:left)
       elsif !strafe_right.nil? && strafe_right == event.key
         accelerate(:right)
+      elsif !pan_left.nil? && pan_left == event.key
+        engine.pan(:left)
+      elsif !pan_right.nil? && pan_right == event.key
+        engine.pan(:right)
+      elsif !pan_up.nil? && pan_up == event.key
+        engine.pan(:up)
+      elsif !pan_down.nil? && pan_down == event.key
+        engine.pan(:down)
       end
 
       handle_other_events(event, key_hold_actions)
@@ -62,7 +75,9 @@ module Movables
         when :debug
           Core::Gui.instance.toggle_debug_info
         when :unknown
-          p 'something'
+          # nothing yet...
+        when :reset_position
+          engine.reset_position
         when :play_music
           play_music('butterfly')
         when :play_sound

@@ -1,18 +1,14 @@
 # frozen_string_literal: true
 
 require_relative './screen_positioning'
-require_relative '../core/sound_player'
 
-module Movables
-  class Movable
+module Unmovables
+  class Ground
     include Movables::ScreenPositioning
-    include Core::SoundPlayer
 
     attr_reader :velocity_x, :velocity_y, :rotation_speed, :acceleration, :friction_affected, :gravity_affected, :id,
-                :mark_for_remove, :image, :selectable
-
-    alias selectable? selectable
-
+                :mark_for_remove, :image
+    
     private def screen_width
       engine.bounds[:width]
     end
@@ -37,7 +33,6 @@ module Movables
       @velocity_x = 0.0
       @velocity_y = 0.0
       @id = id
-      @selectable = false
 
       update_attributes
     end

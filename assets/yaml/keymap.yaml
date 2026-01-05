@@ -5,6 +5,10 @@ movement:
   turn_right: d
   strafe_left: q
   strafe_right: e
+  pan_up: up
+  pan_down: down
+  pan_left: left
+  pan_right: right
 other_keybinding:
   key_down:
     action_1: 1
@@ -20,6 +24,7 @@ other_keybinding:
     debug: '/'
     play_sound: 'l'
     play_music:  m
+    reset_position: o
   key_hold:
     shoot: space
     unknown: ','

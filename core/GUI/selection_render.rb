@@ -7,6 +7,14 @@ module Core
       attr_reader :z_level
       attr_reader :color
       attr_reader :selectable
+      
+      def zoomlevel
+        engine.zoomlevel
+      end
+
+      def engine
+        Core::Engine.instance
+      end
 
       def initialize
         @min_selection_size ||= 10
@@ -60,13 +68,21 @@ module Core
         lines.each { |line| line.color = self.color }
       end
 
-      private def resize
-        top = selectable.y - min_selection_size
-        left = selectable.x - min_selection_size
-        right = selectable.x + selectable.width + min_selection_size
-        bottom = selectable.y + min_selection_size + selectable.height
+      def relative_x_pos
+        (selectable.x - engine.x_min) * zoomlevel
+      end
 
-        corner_size = selectable.width > selectable.height ? selectable.width : selectable.height
+      def relative_y_pos
+        (selectable.y - engine.y_min) * zoomlevel
+      end
+
+      private def resize
+        top = relative_y_pos - min_selection_size
+        left = relative_x_pos - min_selection_size
+        right = relative_x_pos + selectable.visible_width + min_selection_size
+        bottom = relative_y_pos + min_selection_size + selectable.visible_height
+
+        corner_size = selectable.width > selectable.height ? selectable.width * zoomlevel : selectable.height * zoomlevel
         corner_size = corner_size / 3.0
         corner_size = min_selection_size if corner_size < min_selection_size
 

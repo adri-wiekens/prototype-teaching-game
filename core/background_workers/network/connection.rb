@@ -11,14 +11,9 @@ module Core
           remove_interval
         end
 
-        def say_something
-          p "#{name} says : #{rand(10000..30000)}"
-        end
-
         def run_task
           number = rand(1..3)
-          sleep(number)            
-          say_something
+          sleep(number)
         end
       end
     end

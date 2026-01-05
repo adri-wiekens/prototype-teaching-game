@@ -3,11 +3,8 @@
 module Core
   module BackgroundWorkers
     class BackgroundWorker
+      attr_reader :id, :exit, :interval
 
-      attr_reader :id
-      attr_reader :exit
-      attr_reader :interval
-      
       def initialize(number, interval: 1)
         @id = number
         @interval = interval
@@ -20,7 +17,7 @@ module Core
       end
 
       def name
-        "#{self.class.name} - #{self.id}"
+        "#{self.class.name} - #{id}"
       end
 
       def stop
@@ -40,11 +37,11 @@ module Core
       end
 
       def run
-        while !self.exit do
+        until self.exit
           run_task
           sleep(@interval) unless interval.nil?
         end
-        manager.connection_objects.reject! {|_key, val| val.exit }
+        manager.connection_objects.reject! { |_key, val| val.exit }
       end
     end
   end

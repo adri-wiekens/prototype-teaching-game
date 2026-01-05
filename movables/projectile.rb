@@ -37,10 +37,13 @@ module Movables
 
     def update_position(friction)
       super
-      if x > screen_width || x < 0
+     
+      if x < limits[:west] || x > limits[:east]
         self.remove_me
         self.remove
-      elsif y > screen_height
+      end
+
+      if -y > limits[:ground]
         self.remove_me
         self.remove
       end
@@ -48,6 +51,14 @@ module Movables
 
     def engine
       Core::Engine.instance
+    end
+
+    def limits
+      @limits ||= world.limits
+    end
+
+    def world
+      Unmovables::World.current
     end
   end
 end

@@ -38,10 +38,8 @@ module Core
       private def initialize_worker_from_type(worker_type, interval: 1)
         case worker_type
         when :connection
-          p "building connection"
           Network::Connection.new(get_thread_id)
         when :ticker
-          p "building ticker"
           Other::Ticker.new(get_thread_id, interval:)
         when :background_worker
           BackgroundWorker.new(get_thread_id)
